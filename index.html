@@ -1,0 +1,267 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EcoTrack - Dummy Login Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    body { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); min-height: 100vh; }
+  </style>
+</head>
+<body class="font-sans">
+  <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+    <div class="text-xl font-bold cursor-pointer" onclick="showSection('dashboard')">EcoTrack</div>
+    <nav id="nav-links" class="hidden md:flex space-x-6">
+      <button onclick="showSection('dashboard')" class="hover:underline">Dashboard</button>
+      <button onclick="showSection('input')" class="hover:underline">Input</button>
+      <button onclick="showSection('suggestions')" class="hover:underline">Suggestions</button>
+      <button onclick="showSection('rewards')" class="hover:underline">Rewards</button>
+      <button onclick="showSection('community')" class="hover:underline">Community</button>
+      <button onclick="showSection('marketplace')" class="hover:underline">Marketplace</button>
+      <button id="logout-btn" onclick="logout()" class="hover:underline">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container mx-auto px-4 py-6">
+    <!-- Login -->
+    <section id="login" class="tab-content active max-w-md mx-auto card">
+      <h2 class="text-2xl font-bold mb-4">Login to EcoTrack</h2>
+      <form id="login-form" class="space-y-4">
+        <input type="email" id="login-email" placeholder="Email" required class="input" />
+        <input type="password" id="login-password" placeholder="Password" required class="input" />
+        <button type="submit" class="btn w-full">Login</button>
+      </form>
+      <p class="mt-4 text-center">
+        Don't have an account?
+        <button onclick="showSection('register')" class="text-green-600 underline">Register</button>
+      </p>
+    </section>
+
+    <!-- Register -->
+    <section id="register" class="tab-content max-w-md mx-auto card">
+      <h2 class="text-2xl font-bold mb-4">Register for EcoTrack</h2>
+      <form id="register-form" class="space-y-4">
+        <input type="email" id="reg-email" placeholder="Email" required class="input" />
+        <input type="password" id="reg-password" placeholder="Password" required class="input" />
+        <input type="password" id="reg-confirm" placeholder="Confirm Password" required class="input" />
+        <button type="submit" class="btn w-full">Register</button>
+      </form>
+      <p class="mt-4 text-center">
+        Already have an account?
+        <button onclick="showSection('login')" class="text-green-600 underline">Login</button>
+      </p>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab-content max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Your Carbon Dashboard</h1>
+      <p class="text-center mb-6">Welcome! You are logged in with dummy authentication.</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">This Month's Footprint</h3>
+          <p>Sample data: 120 kg CO₂</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold mb-4">Comparison</h3>
+          <p>Last month: 150 kg CO₂ — You reduced your footprint!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Form -->
+    <section id="input" class="tab-content max-w-lg mx-auto card">
+      <h2 class="text-2xl font-bold mb-4">Enter Your Monthly Usage</h2>
+      <form id="input-form" class="space-y-4">
+        <input type="number" id="electricity" placeholder="Electricity (units)" class="input" />
+        <input type="number" id="car-km" placeholder="Car distance (km)" class="input" />
+        <input type="number" id="bike-km" placeholder="Bike distance (km)" class="input" />
+        <input type="number" id="train-km" placeholder="Train distance (km)" class="input" />
+        <input type="number" id="flight-km" placeholder="Flight distance (km)" class="input" />
+        <input type="number" id="shopping-spend" placeholder="Shopping spend (₹)" class="input" />
+        <button type="submit" class="btn w-full">Calculate Footprint</button>
+      </form>
+      <div id="result" class="mt-4 text-center hidden">
+        <p>Your Carbon Footprint: <span id="total-co2">0</span> kg CO₂</p>
+        <p id="message" class="text-sm mt-2"></p>
+      </div>
+    </section>
+
+    <!-- Suggestions -->
+    <section id="suggestions" class="tab-content max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Eco-Friendly Suggestions</h1>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="card">
+          <h3 class="text-xl font-semibold mt-4">Reduce Electricity</h3>
+          <p>Switch to LED bulbs, use solar panels, unplug devices.</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold mt-4">Reduce Travel</h3>
+          <p>Use public transport, carpool, or cycle for short trips.</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold mt-4">Reduce Shopping</h3>
+          <p>Choose local, sustainable products and reduce waste.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rewards -->
+    <section id="rewards" class="tab-content max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Your Rewards</h1>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card">
+          <h3 class="text-xl font-semibold">Points</h3>
+          <p id="points">0 points</p>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold">Badges</h3>
+          <ul id="badges-list">
+            <li>Beginner - Complete first entry</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold">Leaderboard</h3>
+        <ol id="leaderboard">
+          <li>1. User1 - 500 points</li>
+          <li>2. User2 - 450 points</li>
+          <li>3. User3 - 400 points</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Community -->
+    <section id="community" class="tab-content max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Community Posts</h1>
+      <div class="card">
+        <p>"Joined the Carpool Challenge to reduce car emissions!"</p>
+        <small>Posted by EcoWarrior</small>
+      </div>
+      <div class="card">
+        <p>"Switched to reusable bags at the store."</p>
+        <small>Posted by GreenThumb</small>
+      </div>
+    </section>
+
+    <!-- Marketplace -->
+    <section id="marketplace" class="tab-content max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center">Eco Marketplace</h1>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="card">
+          <h3>Solar Lamp - ₹500</h3>
+          <button class="btn mt-2">Buy Now</button>
+        </div>
+        <div class="card">
+          <h3>Bamboo Bottle - ₹200</h3>
+          <button class="btn mt-2">Buy Now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-100 text-center text-sm text-gray-600 py-4 mt-8">
+    © UniqueTech Creators – All Rights Reserved 2025
+  </footer>
+
+  <script>
+    // Navigation and dummy auth state
+    const sections = [
+      "login",
+      "register",
+      "dashboard",
+      "input",
+      "suggestions",
+      "rewards",
+      "community",
+      "marketplace",
+    ];
+    let loggedIn = false;
+
+    function showSection(id) {
+      sections.forEach((sec) => {
+        document.getElementById(sec).classList.remove("active");
+      });
+      document.getElementById(id).classList.add("active");
+      updateNav();
+    }
+
+    function updateNav() {
+      const navLinks = document.getElementById("nav-links");
+      const logoutBtn = document.getElementById("logout-btn");
+      if (loggedIn) {
+        navLinks.style.display = "flex";
+        logoutBtn.style.display = "inline";
+      } else {
+        navLinks.style.display = "none";
+        logoutBtn.style.display = "none";
+      }
+    }
+
+    // Dummy login: accept any email/password
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      loggedIn = true;
+      showSection("dashboard");
+    });
+
+    // Dummy register: accept any email/password, confirm password match
+    document.getElementById("register-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pass = document.getElementById("reg-password").value;
+      const confirm = document.getElementById("reg-confirm").value;
+      if (pass !== confirm) {
+        alert("Passwords do not match!");
+        return;
+      }
+      loggedIn = true;
+      showSection("dashboard");
+    });
+
+    function logout() {
+      loggedIn = false;
+      showSection("login");
+    }
+
+    // Carbon footprint calculation
+    document.getElementById("input-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const electricity = parseFloat(document.getElementById("electricity").value) || 0;
+      const carKm = parseFloat(document.getElementById("car-km").value) || 0;
+      const bikeKm = parseFloat(document.getElementById("bike-km").value) || 0;
+      const trainKm = parseFloat(document.getElementById("train-km").value) || 0;
+      const flightKm = parseFloat(document.getElementById("flight-km").value) || 0;
+      const shoppingSpend = parseFloat(document.getElementById("shopping-spend").value) || 0;
+
+      const multipliers = {
+        electricity: 0.82,
+        car: 0.2,
+        bike: 0,
+        train: 0.05,
+        flight: 0.25,
+        shopping: 0.005,
+      };
+
+      const total =
+        electricity * multipliers.electricity +
+        carKm * multipliers.car +
+        bikeKm * multipliers.bike +
+        trainKm * multipliers.train +
+        flightKm * multipliers.flight +
+        shoppingSpend * multipliers.shopping;
+
+      document.getElementById("total-co2").textContent = total.toFixed(2);
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("message").textContent =
+        total > 0
+          ? "Your carbon footprint is " + total.toFixed(2) + " kg CO₂"
+          : "Please enter some values to calculate footprint.";
+    });
+
+    // Initialize
+    showSection("login");
+  </script>
+</body>
+</html>
